@@ -10,10 +10,14 @@ Rails.application.routes.draw do
   get "users/update"
   get "users/destroy"
   resources :posts
-  resources :tasks, only: [:index]
+  resources :users, only: [:index, :show, :create] do
+    resources :tasks, only: [:index]
+  end
   post '/signup', to: 'users#create'
   post '/login', to: 'users#authenticate'
-  post '/task', to: 'tasks#create'
+  post '/task', to: 'tasks#create' # This is for create a task
+  delete '/task/:id', to: 'tasks#destroy' # This is for delete a task
+  put '/task/:id', to: 'tasks#update' # This is for update a task
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.

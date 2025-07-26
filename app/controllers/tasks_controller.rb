@@ -1,6 +1,10 @@
 class TasksController < ApplicationController
   def index
-    @tasks = Task.all
+    if params[:user_id]
+      @tasks = User.find(params[:user_id]).tasks
+    else
+      @tasks = Task.all
+    end
     render json: @tasks
   end
 
@@ -18,9 +22,18 @@ class TasksController < ApplicationController
   end
 
   def update
+    @task = Task.find(params[:id])
+    if @task.update(task_params)
+      render json: @task
+    else
+      render json: @task.errors, status: :unprocessable_entity
+    end
   end
 
   def destroy
+    @task = Task.find(params[:id])
+    @task.destroy
+    head :no_content
   end
 
   private
